@@ -5,7 +5,7 @@ defmodule Despamilator.Filter.UnusualCharacters do
 
   alias Despamilator.Subject
 
-  @external_resource Path.join([:code.priv_dir(:despamilator) |> to_string(), "unusual_characters.txt"])
+  @external_resource Path.join([:code.priv_dir(:despamilator_elixir) |> to_string(), "unusual_characters.txt"])
 
   combos =
     @external_resource

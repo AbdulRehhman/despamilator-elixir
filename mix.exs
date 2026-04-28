@@ -6,7 +6,7 @@ defmodule Despamilator.MixProject do
 
   def project do
     [
-      app: :despamilator,
+      app: :despamilator_elixir,
       version: @version,
       elixir: "~> 1.15",
       elixirc_paths: elixirc_paths(Mix.env()),
@@ -40,7 +40,7 @@ defmodule Despamilator.MixProject do
 
   defp package do
     [
-      name: "despamilator",
+      name: "despamilator_elixir",
       maintainers: ["Abdul Rehman"],
       licenses: ["MIT"],
       links: %{

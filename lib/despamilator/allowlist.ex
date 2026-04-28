@@ -4,7 +4,7 @@ defmodule Despamilator.Allowlist do
 
   Configure via:
 
-      config :despamilator,
+      config :despamilator_elixir_elixir,
         url_allowlist: [
           "pakwheels.com",
           "google.com",
@@ -28,7 +28,7 @@ defmodule Despamilator.Allowlist do
 
   @doc "Returns the configured allow-list."
   def entries do
-    Application.get_env(:despamilator, :url_allowlist, [])
+    Application.get_env(:despamilator_elixir, :url_allowlist, [])
   end
 
   @doc "True if `host` (e.g. `\"www.example.com\"`) is allow-listed."

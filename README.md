@@ -1,8 +1,8 @@
 # Despamilator
 
-[![Hex.pm](https://img.shields.io/hexpm/v/despamilator.svg)](https://hex.pm/packages/despamilator)
-[![Hex.pm](https://img.shields.io/hexpm/dt/despamilator.svg)](https://hex.pm/packages/despamilator)
-[![Hex Docs](https://img.shields.io/badge/hex-docs-blue.svg)](https://hexdocs.pm/despamilator)
+[![Hex.pm](https://img.shields.io/hexpm/v/despamilator_elixir.svg)](https://hex.pm/packages/despamilator_elixir)
+[![Hex.pm](https://img.shields.io/hexpm/dt/despamilator_elixir.svg)](https://hex.pm/packages/despamilator_elixir)
+[![Hex Docs](https://img.shields.io/badge/hex-docs-blue.svg)](https://hexdocs.pm/despamilator_elixir)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
 Plugin-based heuristic spam scanner for free-text input — designed for web
@@ -15,12 +15,12 @@ A score of `1.0` and above is a reasonable spam threshold. Tune to taste.
 
 ## Installation
 
-Add `:despamilator` to your `mix.exs`:
+Add `:despamilator_elixir` to your `mix.exs`:
 
 ```elixir
 def deps do
   [
-    {:despamilator, "~> 2.1"}
+    {:despamilator_elixir, "~> 2.1"}
   ]
 end
 ```
@@ -115,7 +115,7 @@ Stop the URL-aware filters (`URLs`, `IPAddressURL`, `SpammyTLDs`,
 # config/config.exs
 import Config
 
-config :despamilator,
+config :despamilator_elixir,
   url_allowlist: [
     "pakwheels.com",          # exact host or any subdomain
     "your-app.com",
@@ -168,14 +168,14 @@ built-ins:
 # config/config.exs
 import Config
 
-config :despamilator,
+config :despamilator_elixir,
   filters: Despamilator.filters() ++ [MyApp.Filter.AllCapsWords]
 ```
 
 Or replace the entire list outright (e.g. if you want to drop `NaughtyWords`):
 
 ```elixir
-config :despamilator,
+config :despamilator_elixir,
   filters: [
     Despamilator.Filter.HtmlTags,
     Despamilator.Filter.ScriptTag,

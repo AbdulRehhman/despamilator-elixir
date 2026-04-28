@@ -35,9 +35,9 @@ defmodule Despamilator do
   @doc "Convenience accessor — returns just the matches list."
   def matches(text) when is_binary(text), do: Subject.matches(scan(text))
 
-  @doc "All registered filter modules. Override via `:despamilator, :filters` config."
+  @doc "All registered filter modules. Override via `:despamilator_elixir, :filters` config."
   def filters do
-    Application.get_env(:despamilator, :filters, default_filters())
+    Application.get_env(:despamilator_elixir, :filters, default_filters())
   end
 
   defp default_filters do
