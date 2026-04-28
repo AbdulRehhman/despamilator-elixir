@@ -3,13 +3,15 @@ defmodule Despamilator.Filter.VeryLongDomainName do
     name: "Very Long Domain Name",
     description: "Detects unusually long domain names."
 
-  alias Despamilator.Subject
+  alias Despamilator.{Allowlist, Subject}
 
   @host_regex ~r{https?://([^\s/?#]+)}i
 
   @impl true
   def parse(%Subject{} = subject) do
-    Regex.scan(@host_regex, subject.text, capture: :all_but_first)
+    text = Allowlist.strip(subject.text)
+
+    Regex.scan(@host_regex, text, capture: :all_but_first)
     |> Enum.map(fn [host] -> host end)
     |> Enum.reduce(subject, fn host, acc ->
       cond do

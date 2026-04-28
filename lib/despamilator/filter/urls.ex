@@ -3,12 +3,13 @@ defmodule Despamilator.Filter.URLs do
     name: "URLs",
     description: "Detects each url in a string"
 
-  alias Despamilator.Subject
+  alias Despamilator.{Allowlist, Subject}
 
   @impl true
   def parse(%Subject{} = subject) do
     text =
       subject.text
+      |> Allowlist.strip()
       |> String.downcase()
       |> String.replace(~r{http://\d+\.\d+\.\d+\.\d+}, "")
 

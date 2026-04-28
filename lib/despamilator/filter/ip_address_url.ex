@@ -3,11 +3,13 @@ defmodule Despamilator.Filter.IPAddressURL do
     name: "IP Address URL",
     description: "Detects IP address URLs"
 
-  alias Despamilator.Subject
+  alias Despamilator.{Allowlist, Subject}
 
   @impl true
   def parse(%Subject{} = subject) do
-    if Regex.match?(~r{http://\d+\.\d+\.\d+\.\d+}, String.downcase(subject.text)) do
+    text = subject.text |> Allowlist.strip() |> String.downcase()
+
+    if Regex.match?(~r{http://\d+\.\d+\.\d+\.\d+}, text) do
       Subject.register_match(subject, __MODULE__, 0.5)
     else
       subject
