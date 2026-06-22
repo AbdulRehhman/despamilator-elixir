@@ -47,14 +47,14 @@ defmodule Despamilator.MixProject do
         "GitHub" => @source_url,
         "Upstream Ruby gem" => "https://github.com/moowahaha/despamilator"
       },
-      files: ~w(lib priv mix.exs README.md LICENSE)
+      files: ~w(lib priv mix.exs README.md LICENSE CHANGELOG.md)
     ]
   end
 
   defp docs do
     [
       main: "readme",
-      extras: ["README.md", "LICENSE"],
+      extras: ["README.md", "CHANGELOG.md", "LICENSE"],
       source_ref: "v#{@version}",
       source_url: @source_url
     ]
