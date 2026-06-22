@@ -1,7 +1,7 @@
 defmodule Despamilator.MixProject do
   use Mix.Project
 
-  @version "2.1.4"
+  @version "2.1.5"
   @source_url "https://github.com/AbdulRehhman/despamilator"
 
   def project do

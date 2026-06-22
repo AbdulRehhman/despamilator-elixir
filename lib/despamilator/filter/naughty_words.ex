@@ -6,15 +6,15 @@ defmodule Despamilator.Filter.NaughtyWords do
   alias Despamilator.Subject
 
   # English profanity (original Ruby list)
-  @words ~w(
+  @english ~w(
     underage penis viagra bondage cunt fuck shit dick tits nude dicks
     shemale dildo porn cock pussy clit preteen lolita
   )
 
-  # Roman Urdu / Hinglish gaaliyan. Word-boundary matched, plural-tolerant.
-  # Common transliteration variants included.
+  # Roman Urdu / Hinglish gaaliyan. Plural-tolerant. Common transliteration
+  # variants included.
   @roman_urdu ~w(
-    gandu gaandu gand gaand gaandfat gandphat gandmasti 
+    gandu gaandu gand gaand gaandfat gandphat gandmasti
     chutiya chutya chootia chutiye chutiyon chutiyapa chutiyapanti
     madarchod madarchood maderchod maderchood motherchod
     behenchod behnchod bhenchod bhanchod bhanchood bhainchod bc
@@ -26,7 +26,7 @@ defmodule Despamilator.Filter.NaughtyWords do
     lund lauda laude
     choot chodu chodun chudai chudwa chudwana chudwaya chudai
     saala saale saali saalon kanjar kanjri kanjron
-    haijra hijra 
+    haijra hijra
     bhadwa bhadwe bhadwi bhadwapan
     gashti gashtiyan
     moot mootna mooth
@@ -42,8 +42,11 @@ defmodule Despamilator.Filter.NaughtyWords do
     bewakoof bewaqoof
   )
 
-  # Urdu-script gaaliyan. Detected by direct substring (Unicode word boundaries
-  # don't apply cleanly to Arabic-script text and gaalis rarely false-positive).
+  # Urdu-script gaaliyan. Matched on word boundaries (see @urdu_regex) — NOT raw
+  # substrings — because short gaalis are substrings of innocent words:
+  #   کتا (dog) ⊂ سکتا/سکتے (can), کتاب (book); سور (pig) ⊂ سورج (sun)/سوری (sorry);
+  #   موت ⊂ موتی (pearl). Substring matching auto-reported normal Urdu chat.
+  # Normal words are kept out of the list entirely (e.g. موت = "death").
   @urdu_script [
     "گاندو", "گانڈ", "چوتیا", "چوتیے", "چوتیاپا",
     "مادرچود", "مادرچوود", "بہنچود", "بھینچود", "بہن چود",
@@ -60,7 +63,7 @@ defmodule Despamilator.Filter.NaughtyWords do
     "چنال", "چنالی",
     "نکما", "نکمے", "نکمی",
     "گشتی",
-    "موت", "موتنا",
+    "موتنا",
     "ٹٹی", "ٹٹے",
     "دلا", "دلے",
     "تھرکی", "تھرک",
@@ -77,22 +80,44 @@ defmodule Despamilator.Filter.NaughtyWords do
     "بے وقوف", "بیوقوف"
   ]
 
+  # Both regexes are built once at compile time as a single alternation, so a
+  # scan is one pass over the text rather than ~140 separate matches.
+  #
+  #   * @latin_regex — ASCII word boundaries (`\b`), case-insensitive,
+  #     plural-tolerant (`s?`). Covers English + Roman-Urdu.
+  #   * @urdu_regex  — Unicode-letter lookarounds `(?<!\p{L}) … (?!\p{L})`,
+  #     so a gaali only matches as a whole word, never inside a larger Urdu word.
+  @latin_regex (
+                 alt = (@english ++ @roman_urdu) |> Enum.map(&Regex.escape/1) |> Enum.join("|")
+                 Regex.compile!("\\b(?:#{alt})s?\\b", "iu")
+               )
+
+  @urdu_regex (
+                alt = @urdu_script |> Enum.map(&Regex.escape/1) |> Enum.join("|")
+                Regex.compile!("(?<!\\p{L})(?:#{alt})(?!\\p{L})", "u")
+              )
+
   @impl true
   def parse(%Subject{} = subject) do
-    raw = subject.text
-    text = String.downcase(raw)
+    text = subject.text
 
-    subject =
-      Enum.reduce(@words ++ @roman_urdu, subject, fn word, acc ->
-        if Regex.match?(~r/\b#{word}s?\b/u, text),
-          do: Subject.register_match(acc, __MODULE__, 0.8),
-          else: acc
-      end)
+    count =
+      distinct_match_count(@latin_regex, text) +
+        distinct_match_count(@urdu_regex, text)
 
-    Enum.reduce(@urdu_script, subject, fn word, acc ->
-      if String.contains?(raw, word),
-        do: Subject.register_match(acc, __MODULE__, 0.8),
-        else: acc
-    end)
+    if count > 0,
+      do: Subject.register_match(subject, __MODULE__, 0.8 * count),
+      else: subject
+  end
+
+  # Number of distinct gaaliyan present (case-folded), so the score scales with
+  # how many different naughty words appear — matching the original behaviour of
+  # registering 0.8 per matched list entry.
+  defp distinct_match_count(regex, text) do
+    regex
+    |> Regex.scan(text)
+    |> Enum.map(fn [match | _] -> String.downcase(match) end)
+    |> Enum.uniq()
+    |> length()
   end
 end
