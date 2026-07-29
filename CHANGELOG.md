@@ -25,8 +25,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - Previous release. See git history for details.
 
-[2.1.6]: https://github.com/AbdulRehhman/despamilator/releases/tag/v2.1.6
-[2.1.5]: https://github.com/AbdulRehhman/despamilator/releases/tag/v2.1.5
-[2.1.4]: https://github.com/AbdulRehhman/despamilator/releases/tag/v2.1.4
-[#1]: https://github.com/AbdulRehhman/despamilator/pull/1
-[#2]: https://github.com/AbdulRehhman/despamilator/pull/2
+[2.1.6]: https://github.com/AbdulRehhman/despamilator-elixir/releases/tag/v2.1.6
+[2.1.5]: https://github.com/AbdulRehhman/despamilator-elixir/releases/tag/v2.1.5
+[2.1.4]: https://github.com/AbdulRehhman/despamilator-elixir/releases/tag/v2.1.4
+[#1]: https://github.com/AbdulRehhman/despamilator-elixir/pull/1
+[#2]: https://github.com/AbdulRehhman/despamilator-elixir/pull/2
